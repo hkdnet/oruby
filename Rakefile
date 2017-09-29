@@ -3,6 +3,8 @@ def system!(*args)
 end
 
 task :spec do
-  system! 'ruby main.rb src/status0.rb'
-  system! 'ruby main.rb src/status1.rb && exit 1 || exit 0'
+  Dir.glob('test/**/*.sh') do |f|
+    puts f
+    system! f
+  end
 end
