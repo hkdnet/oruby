@@ -2,6 +2,14 @@ require 'pry'
 require 'ripper'
 
 class ORuby
+  class Function
+    attr_reader :id, :body
+    def initialize(id, body)
+      @id = id
+      @body = body
+    end
+  end
+
   def initialize
     @functions = {}
   end
@@ -35,9 +43,10 @@ class ORuby
         raise NotImplementedError, 'binary'
       end
     when :def
-      identifier = sexp[1][2]
+      identifier = sexp[1][1]
       # params_info = sexp[2]
       body = sexp[3][1]
+      functions[identifier] = Function.new(identifier, body)
       0
     else
       binding.pry
