@@ -12,7 +12,14 @@ def reduce(sexp)
     sexp[1].to_i
   when :binary
     l, o, r = sexp.drop(1)
-    reduce(l) + reduce(r) # currently, only support :+
+    case o
+    when :+
+      reduce(l) + reduce(r)
+    when :-
+      reduce(l) - reduce(r)
+    else
+      raise NotImplementedError, 'binary'
+    end
   else
     binding.pry
   end
