@@ -1,40 +1,42 @@
 require 'pry'
 require 'ripper'
 
-def reduce(sexp)
-  puts '-' * 20
-  p sexp
-  if sexp.first == :program
-    return sexp[1].map { |e| reduce e }.last
-  end
-  case sexp.first
-  when :@int
-    sexp[1].to_i
-  when :binary
-    l, o, r = sexp.drop(1)
-    case o
-    when :+
-      reduce(l) + reduce(r)
-    when :-
-      reduce(l) - reduce(r)
-    else
-      raise NotImplementedError, 'binary'
+class ORuby
+  def reduce(sexp)
+    puts '-' * 20
+    p sexp
+    if sexp.first == :program
+      return sexp[1].map { |e| reduce e }.last
     end
-  when :def
-    identifier = sexp[1][2]
-    # params_info = sexp[2]
-    body = sexp[3][1]
-    0
-  else
-    binding.pry
+    case sexp.first
+    when :@int
+      sexp[1].to_i
+    when :binary
+      l, o, r = sexp.drop(1)
+      case o
+      when :+
+        reduce(l) + reduce(r)
+      when :-
+        reduce(l) - reduce(r)
+      else
+        raise NotImplementedError, 'binary'
+      end
+    when :def
+      identifier = sexp[1][2]
+      # params_info = sexp[2]
+      body = sexp[3][1]
+      0
+    else
+      binding.pry
+    end
   end
-end
 
-def evaluate(text)
-  sexp = Ripper.sexp(text)
-  reduce(sexp)
+  def evaluate(text)
+    sexp = Ripper.sexp(text)
+    reduce(sexp)
+  end
 end
 
 filename = ARGV.first
 text = File.read(filename)
-exit evaluate(text)
+exit ORuby.new.evaluate(text)
