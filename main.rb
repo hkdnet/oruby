@@ -20,6 +20,11 @@ def reduce(sexp)
     else
       raise NotImplementedError, 'binary'
     end
+  when :def
+    identifier = sexp[1][2]
+    # params_info = sexp[2]
+    body = sexp[3][1]
+    0
   else
     binding.pry
   end
