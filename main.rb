@@ -2,6 +2,13 @@ require 'pry'
 require 'ripper'
 
 class ORuby
+  def evaluate(text)
+    sexp = Ripper.sexp(text)
+    reduce(sexp)
+  end
+
+  private
+
   def reduce(sexp)
     puts '-' * 20
     p sexp
@@ -29,11 +36,6 @@ class ORuby
     else
       binding.pry
     end
-  end
-
-  def evaluate(text)
-    sexp = Ripper.sexp(text)
-    reduce(sexp)
   end
 end
 
