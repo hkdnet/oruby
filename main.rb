@@ -2,12 +2,18 @@ require 'pry'
 require 'ripper'
 
 class ORuby
+  def initialize
+    @functions = {}
+  end
+
   def evaluate(text)
     sexp = Ripper.sexp(text)
     reduce(sexp)
   end
 
   private
+
+  attr_reader :functions
 
   def reduce(sexp)
     puts '-' * 20
