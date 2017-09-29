@@ -1,4 +1,7 @@
+def evaluate(text)
+  text.to_i
+end
+
 filename = ARGV.first
 text = File.read(filename)
-status = text.to_i
-exit status
+exit evaluate(text)
