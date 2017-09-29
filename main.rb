@@ -8,9 +8,15 @@ class ORuby
       @id = id
       @body = body
     end
+
+    def call(args)
+      oruby = ORuby.new(args)
+      body.map { |e| oruby.reduce(e) }.last
+    end
   end
 
-  def initialize
+  def initialize(args = [])
+    @args = args
     @functions = {}
   end
 
@@ -19,10 +25,6 @@ class ORuby
     reduce(sexp)
   end
 
-  private
-
-  attr_reader :functions
-
   def reduce(sexp)
     puts '-' * 20
     p sexp
@@ -30,6 +32,10 @@ class ORuby
       return sexp[1].map { |e| reduce e }.last
     end
     case sexp.first
+    when :@backref
+      identifier = sexp[1]
+      idx = identifier[1..-1].to_i - 1
+      args[idx]
     when :@int
       sexp[1].to_i
     when :binary
@@ -48,10 +54,18 @@ class ORuby
       body = sexp[3][1]
       functions[identifier] = Function.new(identifier, body)
       0
+    when :command
+      identifier = sexp[1][1]
+      args = sexp[2][1].map { |e| reduce(e) }
+      functions[identifier].call(args)
     else
       binding.pry
     end
   end
+
+  private
+
+  attr_reader :args, :functions
 end
 
 filename = ARGV.first
