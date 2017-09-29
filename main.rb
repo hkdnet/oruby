@@ -5,7 +5,7 @@ def reduce(sexp)
   puts '-' * 20
   p sexp
   if sexp.first == :program
-    return sexp[1].map { |e| reduce e }.first
+    return sexp[1].map { |e| reduce e }.last
   end
   case sexp.first
   when :@int
